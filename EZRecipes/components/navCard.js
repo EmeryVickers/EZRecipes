@@ -2,10 +2,12 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, ScrollView, ImageBackground } from 'react-native';
 
 
-export default function NavCard({imgURL,text}){
-    {/*<ImageBackground style={styles.navButtonImg} source={require(imgURL)}>
-        <Text style={styles.navButtonText}>{text}</Text>
-</ImageBackground>*/}
+export default function NavCard({imgURI,text}){
+    return(
+        <ImageBackground style={styles.navButtonImg} source={imgURI}>
+            <Text style={styles.navButtonText}>{text}</Text>
+        </ImageBackground>
+    )
 }
 const styles = StyleSheet.create({
     navButtonImg: {

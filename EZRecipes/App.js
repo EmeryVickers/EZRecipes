@@ -4,20 +4,7 @@ import { StyleSheet, Text, View, ScrollView, ImageBackground } from 'react-nativ
 import axios from "axios";
 import NavCard from './components/navCard';
 
-
-const options = {
-  method: 'GET',
-  url: 'https://themealdb.p.rapidapi.com/filter.php',
-  params: {
-    i: 'chicken_breast'
-  },
-  headers: {
-    'X-RapidAPI-Key': 1,
-    'X-RapidAPI-Host': 'themealdb.p.rapidapi.com'
-  }
-};
-
-//gets food
+//gets food (not done)
 let pastaTest = getFood();
 async function getFood(){
     try{
@@ -45,8 +32,8 @@ export default function App() {
   return (
     <View style={styles.container}>
       <Text style={styles.header}>EZRecipes</Text>
-      <NavCard></NavCard>
-      <ImageBackground style={styles.navButtonImg} source={require('./assets/images/BeansAndRice.jpg')}>
+      <NavCard imgURI={require('./assets/images/BeansAndRice.jpg')} text='TEST'></NavCard>
+{/*}      <ImageBackground style={styles.navButtonImg} source={require('./assets/images/BeansAndRice.jpg')}>
         <Text style={styles.navButtonText}>Get a Random Recipe!</Text>
       </ImageBackground>
       <ImageBackground style={styles.navButtonImg} source={require('./assets/images/chickenparm.jpg')}>
@@ -54,7 +41,7 @@ export default function App() {
       </ImageBackground>
       <ImageBackground style={styles.navButtonImg} source={require('./assets/images/mapotofu.jpg')}>
         <Text style={styles.navButtonText}>Sort by Category</Text>
-      </ImageBackground>
+  </ImageBackground> */}
       <StatusBar style="auto" />
     </View>
   );
