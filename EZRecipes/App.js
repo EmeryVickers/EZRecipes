@@ -1,37 +1,28 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, ScrollView, ImageBackground } from 'react-native';
-//import axios
 import axios from "axios";
 import NavCard from './components/navCard';
 
 //gets food (not done)
-let pastaTest = getFood();
+let pastaTest = JSON.stringify(getFood());
 async function getFood(){
     try{
         const foodURL = "https://www.themealdb.com/api/json/v1/1/search.php?s=Arrabiata";
         const foodResponse = await axios.get(foodURL);
 
-        let foodData = foodResponse.data.meals[0].strMeal.value;
+        let foodData = foodResponse.data.meals[0].strMeal;
 
         //return
         return (foodData);
     }catch(error){
         return ("Error!: " + error);
     }
-
-  // try {
-  //   const response = await axios.request(options);
-  //   console.log(response.data);
-  //   return(response.data);
-  // } catch (error) {
-  //   console.error(error);
-  // }
 }
 
 export default function App() {
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>EZRecipes</Text>
+      <Text style={styles.header}>EZRecipes </Text>
       <NavCard imgURI={require('./assets/images/BeansAndRice.jpg')} text='Get a Random Recipe!'></NavCard>
       <NavCard imgURI={require('./assets/images/chickenparm.jpg')} text='Sort by Main Ingredient'></NavCard>
       <NavCard imgURI={require('./assets/images/mapotofu.jpg')} text='Sort by Category'></NavCard>
