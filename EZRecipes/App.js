@@ -8,10 +8,10 @@ import NavCard from './components/navCard';
 let pastaTest = getFood();
 async function getFood(){
     try{
-        const foodURL = "www.themealdb.com/api/json/v1/1/search.php?s=Arrabiata";
+        const foodURL = "https://www.themealdb.com/api/json/v1/1/search.php?s=Arrabiata";
         const foodResponse = await axios.get(foodURL);
 
-        let foodData = foodResponse.data.meals[0].strMeal;
+        let foodData = foodResponse.data.meals[0].strMeal.value;
 
         //return
         return (foodData);
@@ -32,16 +32,9 @@ export default function App() {
   return (
     <View style={styles.container}>
       <Text style={styles.header}>EZRecipes</Text>
-      <NavCard imgURI={require('./assets/images/BeansAndRice.jpg')} text='TEST'></NavCard>
-{/*}      <ImageBackground style={styles.navButtonImg} source={require('./assets/images/BeansAndRice.jpg')}>
-        <Text style={styles.navButtonText}>Get a Random Recipe!</Text>
-      </ImageBackground>
-      <ImageBackground style={styles.navButtonImg} source={require('./assets/images/chickenparm.jpg')}>
-        <Text style={styles.navButtonText}>Sort by Main Ingredient</Text>
-      </ImageBackground>
-      <ImageBackground style={styles.navButtonImg} source={require('./assets/images/mapotofu.jpg')}>
-        <Text style={styles.navButtonText}>Sort by Category</Text>
-  </ImageBackground> */}
+      <NavCard imgURI={require('./assets/images/BeansAndRice.jpg')} text='Get a Random Recipe!'></NavCard>
+      <NavCard imgURI={require('./assets/images/chickenparm.jpg')} text='Sort by Main Ingredient'></NavCard>
+      <NavCard imgURI={require('./assets/images/mapotofu.jpg')} text='Sort by Category'></NavCard>
       <StatusBar style="auto" />
     </View>
   );
