@@ -1,11 +1,12 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, ScrollView, ImageBackground } from 'react-native';
-
+import { useNavigation } from '@react-navigation/native';
 
 export default function NavCard({imgURI,text}){
+    const navigation = useNavigation();
     return(
         <ImageBackground style={styles.navButtonImg} source={imgURI}>
-            <Text style={styles.navButtonText}>{text}</Text>
+            <Text style={styles.navButtonText} onPress={() => navigation.navigate("Categories")}>{text}</Text>
         </ImageBackground>
     )
 }
