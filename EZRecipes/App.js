@@ -1,7 +1,8 @@
 import 'react-native-gesture-handler';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, ScrollView, ImageBackground, Image } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, ImageBackground, Image, FlatList } from 'react-native';
 import axios from "axios";
+import { useState, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
@@ -10,20 +11,20 @@ import GroupCard from './components/groupCard';
 import RecipeCard from './components/recipeCard';
 
 //gets food (not done)
-let pastaTest = JSON.stringify(getFood());
-async function getFood(){
-    try{
-        const foodURL = "https://www.themealdb.com/api/json/v1/1/search.php?s=Arrabiata";
-        const foodResponse = await axios.get(foodURL);
+//let pastaTest = JSON.stringify(getFood());
+// async function getFood(){
+//     try{
+//         const foodURL = "https://www.themealdb.com/api/json/v1/1/search.php?s=Arrabiata";
+//         const foodResponse = await axios.get(foodURL);
 
-        let foodData = foodResponse.data.meals[0].strMeal;
+//         let foodData = foodResponse.data.meals[0].strMeal;
 
-        //return
-        return (foodData);
-    }catch(error){
-        return ("Error!: " + error);
-    }
-}
+//         //return
+//         return (foodData);
+//     }catch(error){
+//         return ("Error!: " + error);
+//     }
+// }
 
 const Stack = createStackNavigator();
 
@@ -66,10 +67,24 @@ export default function App() {
 
 //Homepage
 function Home({ navigation }){
+
+  const [foodName, setFoodName] = useState('Placeholder');
+  const foodURL = "https://www.themealdb.com/api/json/v1/1/random.php";
+
+  const getFoodName = async () => {
+    const food = await axios.get(foodURL).then((response) => {
+      setFoodName(response.data.meals[0].strMeal);
+    });
+  }
+
+  useEffect(() =>{
+    getFoodName();
+  }, []);
+
   return(
     <View style={styles.container}>
     <NavCard imgURI={require('./assets/images/BeansAndRice.jpg')} text='Get a Random Recipe!'></NavCard>
-    <NavCard imgURI={require('./assets/images/chickenparm.jpg')} text='Sort by Main Ingredient'></NavCard>
+    <NavCard imgURI={require('./assets/images/chickenparm.jpg')} text='Sort by Location'></NavCard>
     <NavCard imgURI={require('./assets/images/mapotofu.jpg')} text='Sort by Category'></NavCard>
     <StatusBar style="auto" />
     </View>
@@ -81,10 +96,13 @@ function Categories({ navigation }){
   return(
     <View style={styles.container}>
       <ScrollView style={{margin: 15, width: '80%'}}contentContainerStyle={{gap: 30}}>
-        <GroupCard imgURI={require('./assets/images/BeansAndRice.jpg')} text='Cajun-Creole'></GroupCard>
-        <GroupCard imgURI={require('./assets/images/BeansAndRice.jpg')} text='Cajun-Creole'></GroupCard>
-        <GroupCard imgURI={require('./assets/images/BeansAndRice.jpg')} text='Cajun-Creole'></GroupCard>
-        <GroupCard imgURI={require('./assets/images/BeansAndRice.jpg')} text='Cajun-Creole'></GroupCard>
+        <GroupCard imgURI={require('./assets/images/BeansAndRice.jpg')} text='Beef'></GroupCard>
+        <GroupCard imgURI={require('./assets/images/BeansAndRice.jpg')} text='Chicken'></GroupCard>
+        <GroupCard imgURI={require('./assets/images/BeansAndRice.jpg')} text='Dessert'></GroupCard>
+        <GroupCard imgURI={require('./assets/images/BeansAndRice.jpg')} text='Pork'></GroupCard>
+        <GroupCard imgURI={require('./assets/images/BeansAndRice.jpg')} text='Salmon'></GroupCard>
+        <GroupCard imgURI={require('./assets/images/BeansAndRice.jpg')} text='Starter'></GroupCard>
+        <GroupCard imgURI={require('./assets/images/BeansAndRice.jpg')} text='Vegetarian'></GroupCard>
       </ScrollView>
     </View>
   )
@@ -93,15 +111,24 @@ function Categories({ navigation }){
 //List of Recipes
 function RecipeList({route, navigation }){
   const {name} = route.params;
+
+  const [food, setFood] = useState('Placeholder');
+  const foodURL = `https://www.themealdb.com/api/json/v1/1/filter.php?c=${name}`;
+
+  const getFood = async () => {
+    const foodReq = await axios.get(foodURL).then((response) => {
+      setFood(response.data.meals);
+    });
+  }
+
+  useEffect(() =>{
+    getFood();
+  }, []);
+
   return(
     <View style={styles.container}>
-    <ScrollView style={{margin: 15, width: '80%'}}contentContainerStyle={{gap: 30}}>
-      <RecipeCard imgURI={require('./assets/images/BeansAndRice.jpg')} text='Red Beans and Rice'></RecipeCard>
-      <RecipeCard imgURI={require('./assets/images/BeansAndRice.jpg')} text='Red Beans and Rice'></RecipeCard>
-      <RecipeCard imgURI={require('./assets/images/BeansAndRice.jpg')} text='Red Beans and Rice'></RecipeCard>
-      <RecipeCard imgURI={require('./assets/images/BeansAndRice.jpg')} text='Red Beans and Rice'></RecipeCard>
-    </ScrollView>
-  </View>
+      <FlatList data={food} renderItem={({item}) => <RecipeCard imgURI={item.strMealThumb} text={item.strMeal}></RecipeCard>}  style={{margin: 15, width: '80%'}}contentContainerStyle={{gap: 30}}/>
+    </View>
   )
 }
 
@@ -109,10 +136,11 @@ function RecipeList({route, navigation }){
 function Recipe({route, navigation }){
   const {name} = route.params;
   const {image} = route.params;
+  alert(image);
   return(
     <View style={styles.container}>
       <ScrollView style={{margin: 10, width: '80%',}} contentContainerStyle={{alignItems: 'center'}}>
-        <Image source={image} style={{borderWidth: 10, borderColor: '#351100', width: '100%'}}></Image>
+        <Image source={{uri: image}} style={{borderWidth: 10, borderColor: '#351100', width: '100%', height: 300}}></Image>
         <Text style={{fontWeight: 'bold', fontSize: 26, textAlign: 'center', margin: 8}}>{name}</Text>
         <Text style={{fontSize: 20, fontFamily: 'serif',}}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Enim sed faucibus turpis in eu mi bibendum neque. Nunc congue nisi vitae suscipit tellus mauris. Accumsan sit amet nulla facilisi. Feugiat scelerisque varius morbi enim nunc faucibus a. Velit euismod in pellentesque massa placerat duis ultricies lacus sed. Consequat mauris nunc congue nisi vitae suscipit. Diam quis enim lobortis scelerisque fermentum dui faucibus in. In fermentum et sollicitudin ac orci phasellus egestas. Tincidunt ornare massa eget egestas purus viverra accumsan in. Phasellus egestas tellus rutrum tellus. Sagittis orci a scelerisque purus semper eget duis.</Text>
       </ScrollView>

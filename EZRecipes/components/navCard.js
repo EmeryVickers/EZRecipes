@@ -17,6 +17,8 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end',
         alignItems: 'center',
         textAlign: 'center',
+        borderColor: '#351100',
+        borderBottomWidth: 4,
       },
       navButtonText: {
         backgroundColor: '#351100',
@@ -25,6 +27,7 @@ const styles = StyleSheet.create({
         width: '80%',
         fontSize: 20,
         fontFamily: 'serif',
+        fontWeight: 'bold',
         textAlign: 'center',
       },
 });
