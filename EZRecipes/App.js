@@ -93,9 +93,22 @@ function Home({ navigation }){
 
 //Category List
 function Categories({ navigation }){
+  const [categories, setCategories] = useState('Placeholder');
+  const categoryURL = `https://www.themealdb.com/api/json/v1/1/list.php?c=list`;
+
+  const getCategories = async () => {
+    const catReq = await axios.get(categoryURL).then((response) => {
+      setCategories(response.data.meals);
+    });
+  }
+
+  useEffect(() =>{
+    getCategories();
+  }, []);
+
   return(
     <View style={styles.container}>
-      <ScrollView style={{margin: 15, width: '80%'}}contentContainerStyle={{gap: 30}}>
+      {/* <ScrollView style={{margin: 15, width: '80%'}}contentContainerStyle={{gap: 30}}>
         <GroupCard imgURI={require('./assets/images/BeansAndRice.jpg')} text='Beef'></GroupCard>
         <GroupCard imgURI={require('./assets/images/BeansAndRice.jpg')} text='Chicken'></GroupCard>
         <GroupCard imgURI={require('./assets/images/BeansAndRice.jpg')} text='Dessert'></GroupCard>
@@ -103,7 +116,9 @@ function Categories({ navigation }){
         <GroupCard imgURI={require('./assets/images/BeansAndRice.jpg')} text='Salmon'></GroupCard>
         <GroupCard imgURI={require('./assets/images/BeansAndRice.jpg')} text='Starter'></GroupCard>
         <GroupCard imgURI={require('./assets/images/BeansAndRice.jpg')} text='Vegetarian'></GroupCard>
-      </ScrollView>
+      </ScrollView> */}
+
+    <FlatList data={categories} renderItem={({item}) => <GroupCard imgURI={item.strMealThumb} text={item.strCategory}></GroupCard>}  style={{margin: 15, width: '80%'}}contentContainerStyle={{gap: 20}}/>
     </View>
   )
 }
@@ -136,13 +151,52 @@ function RecipeList({route, navigation }){
 function Recipe({route, navigation }){
   const {name} = route.params;
   const {image} = route.params;
-  alert(image);
+
+  const [food, setFood] = useState('Placeholder');
+  const foodURL = `https://www.themealdb.com/api/json/v1/1/search.php?s=${name}`;
+
+  const getFood = async () => {
+    const foodReq = await axios.get(foodURL).then((response) => {
+      setFood(response.data.meals);
+    });
+  }
+
+  useEffect(() =>{
+    getFood();
+  }, []);
+
   return(
     <View style={styles.container}>
       <ScrollView style={{margin: 10, width: '80%',}} contentContainerStyle={{alignItems: 'center'}}>
         <Image source={{uri: image}} style={{borderWidth: 10, borderColor: '#351100', width: '100%', height: 300}}></Image>
         <Text style={{fontWeight: 'bold', fontSize: 26, textAlign: 'center', margin: 8}}>{name}</Text>
-        <Text style={{fontSize: 20, fontFamily: 'serif',}}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Enim sed faucibus turpis in eu mi bibendum neque. Nunc congue nisi vitae suscipit tellus mauris. Accumsan sit amet nulla facilisi. Feugiat scelerisque varius morbi enim nunc faucibus a. Velit euismod in pellentesque massa placerat duis ultricies lacus sed. Consequat mauris nunc congue nisi vitae suscipit. Diam quis enim lobortis scelerisque fermentum dui faucibus in. In fermentum et sollicitudin ac orci phasellus egestas. Tincidunt ornare massa eget egestas purus viverra accumsan in. Phasellus egestas tellus rutrum tellus. Sagittis orci a scelerisque purus semper eget duis.</Text>
+        
+        {/* Ingredients! */}
+        <Text style={{fontWeight: 'bold', fontSize: 22, textAlign: 'center', margin: 8}}>Ingredients</Text>
+        {food[0].strIngredient1 ? (<Text style={{fontSize: 20, fontFamily: 'serif',}}>{food[0].strIngredient1}: {food[0].strMeasure1}</Text>) : null}
+        {food[0].strIngredient2 ? (<Text style={{fontSize: 20, fontFamily: 'serif',}}>{food[0].strIngredient2}: {food[0].strMeasure2}</Text>) : null}
+        {food[0].strIngredient3 ? (<Text style={{fontSize: 20, fontFamily: 'serif',}}>{food[0].strIngredient3}: {food[0].strMeasure3}</Text>) : null}
+        {food[0].strIngredient4 ? (<Text style={{fontSize: 20, fontFamily: 'serif',}}>{food[0].strIngredient4}: {food[0].strMeasure4}</Text>) : null}
+        {food[0].strIngredient5 ? (<Text style={{fontSize: 20, fontFamily: 'serif',}}>{food[0].strIngredient5}: {food[0].strMeasure5}</Text>) : null}
+        {food[0].strIngredient6 ? (<Text style={{fontSize: 20, fontFamily: 'serif',}}>{food[0].strIngredient6}: {food[0].strMeasure6}</Text>) : null}
+        {food[0].strIngredient7 ? (<Text style={{fontSize: 20, fontFamily: 'serif',}}>{food[0].strIngredient7}: {food[0].strMeasure7}</Text>) : null}
+        {food[0].strIngredient8 ? (<Text style={{fontSize: 20, fontFamily: 'serif',}}>{food[0].strIngredient8}: {food[0].strMeasure8}</Text>) : null}
+        {food[0].strIngredient9 ? (<Text style={{fontSize: 20, fontFamily: 'serif',}}>{food[0].strIngredient9}: {food[0].strMeasure9}</Text>) : null}
+        {food[0].strIngredient10 ? (<Text style={{fontSize: 20, fontFamily: 'serif',}}>{food[0].strIngredient10}: {food[0].strMeasure10}</Text>) : null}
+        {food[0].strIngredient11 ? (<Text style={{fontSize: 20, fontFamily: 'serif',}}>{food[0].strIngredient11}: {food[0].strMeasure11}</Text>) : null}
+        {food[0].strIngredient12 ? (<Text style={{fontSize: 20, fontFamily: 'serif',}}>{food[0].strIngredient12}: {food[0].strMeasure12}</Text>) : null}
+        {food[0].strIngredient13 ? (<Text style={{fontSize: 20, fontFamily: 'serif',}}>{food[0].strIngredient13}: {food[0].strMeasure13}</Text>) : null}
+        {food[0].strIngredient14 ? (<Text style={{fontSize: 20, fontFamily: 'serif',}}>{food[0].strIngredient14}: {food[0].strMeasure14}</Text>) : null}
+        {food[0].strIngredient15 ? (<Text style={{fontSize: 20, fontFamily: 'serif',}}>{food[0].strIngredient15}: {food[0].strMeasure15}</Text>) : null}
+        {food[0].strIngredient16 ? (<Text style={{fontSize: 20, fontFamily: 'serif',}}>{food[0].strIngredient16}: {food[0].strMeasure16}</Text>) : null}
+        {food[0].strIngredient17 ? (<Text style={{fontSize: 20, fontFamily: 'serif',}}>{food[0].strIngredient17}: {food[0].strMeasure17}</Text>) : null}
+        {food[0].strIngredient18 ? (<Text style={{fontSize: 20, fontFamily: 'serif',}}>{food[0].strIngredient18}: {food[0].strMeasure18}</Text>) : null}
+        {food[0].strIngredient19 ? (<Text style={{fontSize: 20, fontFamily: 'serif',}}>{food[0].strIngredient19}: {food[0].strMeasure19}</Text>) : null}
+        {food[0].strIngredient20 ? (<Text style={{fontSize: 20, fontFamily: 'serif',}}>{food[0].strIngredient20}: {food[0].strMeasure20}</Text>) : null}
+
+        {/* Instructions */}
+        <Text style={{fontWeight: 'bold', fontSize: 22, textAlign: 'center', margin: 8}}>Instructions</Text>
+        <Text style={{fontSize: 20, fontFamily: 'serif',}}>{food[0].strInstructions}</Text>
       </ScrollView>
     </View>
   )
