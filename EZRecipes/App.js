@@ -43,6 +43,12 @@ function MyStack() {
           headerTitleStyle: styles.headerText,
           headerTintColor: '#FFFFF2',
         }}  />
+        <Stack.Screen name="Areas" component={Areas} options={{
+          title: 'Sort by Area',
+          headerStyle: styles.header,
+          headerTitleStyle: styles.headerText,
+          headerTintColor: '#FFFFF2',
+        }}  />
         <Stack.Screen name="RecipeList" component={RecipeList} options={({ route }) => ({
           title: route.params.name,           
           headerStyle: styles.header,
@@ -68,31 +74,33 @@ export default function App() {
 //Homepage
 function Home({ navigation }){
 
-  const [foodName, setFoodName] = useState('Placeholder');
+  const [food, setFood] = useState('Placeholder');
   const foodURL = "https://www.themealdb.com/api/json/v1/1/random.php";
 
-  const getFoodName = async () => {
+  const getFood = async () => {
     const food = await axios.get(foodURL).then((response) => {
-      setFoodName(response.data.meals[0].strMeal);
+      setFood(response.data.meals[0]);
     });
   }
 
   useEffect(() =>{
-    getFoodName();
+    getFood();
   }, []);
 
   return(
     <View style={styles.container}>
-    <NavCard imgURI={require('./assets/images/BeansAndRice.jpg')} text='Get a Random Recipe!'></NavCard>
-    <NavCard imgURI={require('./assets/images/chickenparm.jpg')} text='Sort by Location'></NavCard>
-    <NavCard imgURI={require('./assets/images/mapotofu.jpg')} text='Sort by Category'></NavCard>
+    <NavCard imgURI={require('./assets/images/BeansAndRice.jpg')} text='Get a Random Recipe!' option='Recipe' name={food.strMeal} foodImg={food.strMealThumb}></NavCard>
+    <NavCard imgURI={require('./assets/images/chickenparm.jpg')} text='Sort by Area' option='Areas'></NavCard>
+    <NavCard imgURI={require('./assets/images/mapotofu.jpg')} text='Sort by Category' option='Categories'></NavCard>
     <StatusBar style="auto" />
     </View>
   )
 }
 
 //Category List
-function Categories({ navigation }){
+function Categories({ navigation, route }){
+  const { option } = route.params;
+
   const [categories, setCategories] = useState('Placeholder');
   const categoryURL = `https://www.themealdb.com/api/json/v1/1/list.php?c=list`;
 
@@ -118,7 +126,41 @@ function Categories({ navigation }){
         <GroupCard imgURI={require('./assets/images/BeansAndRice.jpg')} text='Vegetarian'></GroupCard>
       </ScrollView> */}
 
-    <FlatList data={categories} renderItem={({item}) => <GroupCard imgURI={item.strMealThumb} text={item.strCategory}></GroupCard>}  style={{margin: 15, width: '80%'}}contentContainerStyle={{gap: 20}}/>
+    <FlatList data={categories} renderItem={({item}) => <GroupCard imgURI={item.strMealThumb} text={item.strCategory} option={option}></GroupCard>}  style={{margin: 15, width: '80%'}}contentContainerStyle={{gap: 20}}/>
+    </View>
+  )
+}
+
+//Areas List
+function Areas({ navigation, route }){
+  const { option } = route.params;
+
+  const [areas, setAreas] = useState('Placeholder');
+  const areaURL = `https://www.themealdb.com/api/json/v1/1/list.php?a=list`;
+
+  const getAreas = async () => {
+    const areaReq = await axios.get(areaURL).then((response) => {
+      setAreas(response.data.meals);
+    });
+  }
+
+  useEffect(() =>{
+    getAreas();
+  }, []);
+
+  return(
+    <View style={styles.container}>
+      {/* <ScrollView style={{margin: 15, width: '80%'}}contentContainerStyle={{gap: 30}}>
+        <GroupCard imgURI={require('./assets/images/BeansAndRice.jpg')} text='Beef'></GroupCard>
+        <GroupCard imgURI={require('./assets/images/BeansAndRice.jpg')} text='Chicken'></GroupCard>
+        <GroupCard imgURI={require('./assets/images/BeansAndRice.jpg')} text='Dessert'></GroupCard>
+        <GroupCard imgURI={require('./assets/images/BeansAndRice.jpg')} text='Pork'></GroupCard>
+        <GroupCard imgURI={require('./assets/images/BeansAndRice.jpg')} text='Salmon'></GroupCard>
+        <GroupCard imgURI={require('./assets/images/BeansAndRice.jpg')} text='Starter'></GroupCard>
+        <GroupCard imgURI={require('./assets/images/BeansAndRice.jpg')} text='Vegetarian'></GroupCard>
+      </ScrollView> */}
+
+    <FlatList data={areas} renderItem={({item}) => <GroupCard imgURI={item.strMealThumb} text={item.strArea} option={option}></GroupCard>}  style={{margin: 15, width: '80%'}}contentContainerStyle={{gap: 20}}/>
     </View>
   )
 }
@@ -126,9 +168,17 @@ function Categories({ navigation }){
 //List of Recipes
 function RecipeList({route, navigation }){
   const {name} = route.params;
+  const {option} = route.params;
+
+  let listFilter;
+  if(option === "Categories"){
+    listFilter = 'c';
+  }else if(option === "Areas"){
+    listFilter = 'a';
+  }
 
   const [food, setFood] = useState('Placeholder');
-  const foodURL = `https://www.themealdb.com/api/json/v1/1/filter.php?c=${name}`;
+  const foodURL = `https://www.themealdb.com/api/json/v1/1/filter.php?${listFilter}=${name}`;
 
   const getFood = async () => {
     const foodReq = await axios.get(foodURL).then((response) => {

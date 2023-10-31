@@ -2,10 +2,10 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, ScrollView, ImageBackground, Image, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
-export default function GroupCard({imgURI,text}){
+export default function GroupCard({imgURI,text, option}){
     const navigation = useNavigation();
     return(
-        <TouchableOpacity onPress={() => navigation.navigate("RecipeList", {name: text})}>
+        <TouchableOpacity onPress={() => navigation.navigate("RecipeList", {name: text, option: option})}>
             <Text style={styles.buttonText}>{text}</Text>
         </TouchableOpacity>
     )
