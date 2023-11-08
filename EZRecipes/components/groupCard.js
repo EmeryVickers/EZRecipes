@@ -2,6 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, ScrollView, ImageBackground, Image, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
+//cards containing 'groups' of food, such as areas or categories of food
 export default function GroupCard({imgURI,text, option}){
     const navigation = useNavigation();
     return(

@@ -2,10 +2,11 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, ScrollView, ImageBackground, Image, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
-export default function RecipeCard({imgURI,text}){
+//cards displaying recipes
+export default function RecipeCard({imgURI,text,option}){
     const navigation = useNavigation();
     return(
-        <TouchableOpacity onPress={() => navigation.navigate("Recipe", {name: text, image: imgURI})}>
+        <TouchableOpacity onPress={() => navigation.navigate("Recipe", {name: text, image: imgURI, option: option})}>
             <Image style={styles.buttonImg} source={{uri: imgURI}} />
             <Text style={styles.buttonText}>{text}</Text>
         </TouchableOpacity>

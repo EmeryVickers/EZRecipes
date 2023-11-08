@@ -10,22 +10,7 @@ import NavCard from './components/navCard';
 import GroupCard from './components/groupCard';
 import RecipeCard from './components/recipeCard';
 
-//gets food (not done)
-//let pastaTest = JSON.stringify(getFood());
-// async function getFood(){
-//     try{
-//         const foodURL = "https://www.themealdb.com/api/json/v1/1/search.php?s=Arrabiata";
-//         const foodResponse = await axios.get(foodURL);
-
-//         let foodData = foodResponse.data.meals[0].strMeal;
-
-//         //return
-//         return (foodData);
-//     }catch(error){
-//         return ("Error!: " + error);
-//     }
-// }
-
+//stack nav
 const Stack = createStackNavigator();
 
 function MyStack() {
@@ -63,6 +48,8 @@ function MyStack() {
     </Stack.Navigator>
   );
 }
+
+//app with nav container
 export default function App() {
   return (
     <NavigationContainer>
@@ -73,23 +60,9 @@ export default function App() {
 
 //Homepage
 function Home({ navigation }){
-
-  const [food, setFood] = useState('Placeholder');
-  const foodURL = "https://www.themealdb.com/api/json/v1/1/random.php";
-
-  const getFood = async () => {
-    const food = await axios.get(foodURL).then((response) => {
-      setFood(response.data.meals[0]);
-    });
-  }
-
-  useEffect(() =>{
-    getFood();
-  }, []);
-
   return(
     <View style={styles.container}>
-    <NavCard imgURI={require('./assets/images/BeansAndRice.jpg')} text='Get a Random Recipe!' option='Recipe' name={food.strMeal} foodImg={food.strMealThumb}></NavCard>
+    <NavCard imgURI={require('./assets/images/BeansAndRice.jpg')} text='Get a Random Recipe!' option='Recipe' name="Random Recipe!"></NavCard>
     <NavCard imgURI={require('./assets/images/chickenparm.jpg')} text='Sort by Area' option='Areas'></NavCard>
     <NavCard imgURI={require('./assets/images/mapotofu.jpg')} text='Sort by Category' option='Categories'></NavCard>
     <StatusBar style="auto" />
@@ -116,16 +89,6 @@ function Categories({ navigation, route }){
 
   return(
     <View style={styles.container}>
-      {/* <ScrollView style={{margin: 15, width: '80%'}}contentContainerStyle={{gap: 30}}>
-        <GroupCard imgURI={require('./assets/images/BeansAndRice.jpg')} text='Beef'></GroupCard>
-        <GroupCard imgURI={require('./assets/images/BeansAndRice.jpg')} text='Chicken'></GroupCard>
-        <GroupCard imgURI={require('./assets/images/BeansAndRice.jpg')} text='Dessert'></GroupCard>
-        <GroupCard imgURI={require('./assets/images/BeansAndRice.jpg')} text='Pork'></GroupCard>
-        <GroupCard imgURI={require('./assets/images/BeansAndRice.jpg')} text='Salmon'></GroupCard>
-        <GroupCard imgURI={require('./assets/images/BeansAndRice.jpg')} text='Starter'></GroupCard>
-        <GroupCard imgURI={require('./assets/images/BeansAndRice.jpg')} text='Vegetarian'></GroupCard>
-      </ScrollView> */}
-
     <FlatList data={categories} renderItem={({item}) => <GroupCard imgURI={item.strMealThumb} text={item.strCategory} option={option}></GroupCard>}  style={{margin: 15, width: '80%'}}contentContainerStyle={{gap: 20}}/>
     </View>
   )
@@ -150,16 +113,6 @@ function Areas({ navigation, route }){
 
   return(
     <View style={styles.container}>
-      {/* <ScrollView style={{margin: 15, width: '80%'}}contentContainerStyle={{gap: 30}}>
-        <GroupCard imgURI={require('./assets/images/BeansAndRice.jpg')} text='Beef'></GroupCard>
-        <GroupCard imgURI={require('./assets/images/BeansAndRice.jpg')} text='Chicken'></GroupCard>
-        <GroupCard imgURI={require('./assets/images/BeansAndRice.jpg')} text='Dessert'></GroupCard>
-        <GroupCard imgURI={require('./assets/images/BeansAndRice.jpg')} text='Pork'></GroupCard>
-        <GroupCard imgURI={require('./assets/images/BeansAndRice.jpg')} text='Salmon'></GroupCard>
-        <GroupCard imgURI={require('./assets/images/BeansAndRice.jpg')} text='Starter'></GroupCard>
-        <GroupCard imgURI={require('./assets/images/BeansAndRice.jpg')} text='Vegetarian'></GroupCard>
-      </ScrollView> */}
-
     <FlatList data={areas} renderItem={({item}) => <GroupCard imgURI={item.strMealThumb} text={item.strArea} option={option}></GroupCard>}  style={{margin: 15, width: '80%'}}contentContainerStyle={{gap: 20}}/>
     </View>
   )
@@ -192,7 +145,7 @@ function RecipeList({route, navigation }){
 
   return(
     <View style={styles.container}>
-      <FlatList data={food} renderItem={({item}) => <RecipeCard imgURI={item.strMealThumb} text={item.strMeal}></RecipeCard>}  style={{margin: 15, width: '80%'}}contentContainerStyle={{gap: 30}}/>
+      <FlatList data={food} renderItem={({item}) => <RecipeCard imgURI={item.strMealThumb} text={item.strMeal} option={option}></RecipeCard>}  style={{margin: 15, width: '80%'}}contentContainerStyle={{gap: 30}}/>
     </View>
   )
 }
@@ -201,9 +154,13 @@ function RecipeList({route, navigation }){
 function Recipe({route, navigation }){
   const {name} = route.params;
   const {image} = route.params;
+  const {option} = route.params;
 
   const [food, setFood] = useState('Placeholder');
-  const foodURL = `https://www.themealdb.com/api/json/v1/1/search.php?s=${name}`;
+
+  //if navigating straight to recipe page, get a random one
+  //otherwise get the chosen recipe
+  const foodURL = option === 'Recipe' ? "https://www.themealdb.com/api/json/v1/1/random.php": `https://www.themealdb.com/api/json/v1/1/search.php?s=${name}`;
 
   const getFood = async () => {
     const foodReq = await axios.get(foodURL).then((response) => {
@@ -218,8 +175,8 @@ function Recipe({route, navigation }){
   return(
     <View style={styles.container}>
       <ScrollView style={{margin: 10, width: '80%',}} contentContainerStyle={{alignItems: 'center'}}>
-        <Image source={{uri: image}} style={{borderWidth: 10, borderColor: '#351100', width: '100%', height: 300}}></Image>
-        <Text style={{fontWeight: 'bold', fontSize: 26, textAlign: 'center', margin: 8}}>{name}</Text>
+        <Image source={{uri: food[0].strMealThumb}} style={{borderWidth: 10, borderColor: '#351100', width: '100%', height: 300}}></Image>
+        <Text style={{fontWeight: 'bold', fontSize: 26, textAlign: 'center', margin: 8}}>{food[0].strMeal}</Text>
         
         {/* Ingredients! */}
         <Text style={{fontWeight: 'bold', fontSize: 22, textAlign: 'center', margin: 8}}>Ingredients</Text>
