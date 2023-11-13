@@ -63,6 +63,15 @@ export default function App() {
 }
 
 //Homepage
+
+/* Main Menu Pic Credits:
+https://www.chilipeppermadness.com/recipes/red-beans-and-rice/ 
+
+https://www.jessicagavin.com/chicken-parmesan/
+
+https://kirbiecravings.com/mapo-tofu/ 
+*/
+
 function Home({ navigation }){
   return(
     <View style={styles.container}>
