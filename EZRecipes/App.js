@@ -10,6 +10,10 @@ import NavCard from './components/navCard';
 import GroupCard from './components/groupCard';
 import RecipeCard from './components/recipeCard';
 
+
+/* CREDITS: This app makes heavy use of TheMealDB API. https://www.themealdb.com/api.php A huge thank you to TheMealDB API team for this data! */
+
+
 //stack nav
 const Stack = createStackNavigator();
 
